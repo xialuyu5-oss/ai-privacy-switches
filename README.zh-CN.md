@@ -11,12 +11,13 @@
 
 ![2026 主流 AI 工具隐私与防训练全景图](./assets/svg/ai-privacy-landscape-zh.svg)
 
-## 🚨 5 条一眼记住的防泄密铁律
+## 🚨 6 条一眼记住的防泄密铁律
 1. **消费版默认训练是常态**：Claude（2025.08起）、GitHub Copilot 个人版（2026.04起）、ChatGPT、Gemini、Grok、Trae、豆包、Kimi、DeepSeek、智谱清言、Canva、Perplexity 消费/免费版全部默认开训练；**腾讯系（WorkBuddy/CodeBuddy/元宝）、Notion AI、NotebookLM、Zed、Amp 及本地开源 Agent** 默认不训练。
 2. **CLI 看认证方式**：Claude Code / Codex / Gemini CLI / Antigravity 用个人消费号登录照样训练，商业 API / Vertex / Enterprise 才默认零训练。
 3. **关记忆 ≠ 删旧记忆**：Claude、豆包、Kimi（记忆空间）、WorkBuddy、Perplexity、Poe、Windsurf 关完开关后**必须再手动清空**。
 4. **`.ignore` 并非处处有效**：Claude Code 无 `.claudeignore`、Codex 无 `.codexignore`、Copilot 无 `.copilotignore`、Cline 已弃用 `.clineignore`、Amp 无 `.ampignore`。
 5. **无痕 ≠ 零留存（ZDR）**：ChatGPT/Claude 无痕留≤30天安全日志，Gemini 2026 已延至约 2 个月；真正零出网请用本地 Ollama/vLLM。
+6. **开源客户端 ≠ 天然免审计（2026.11.25 警示）**：**T3 Code** 虽不直接拿代码训练，但 2026 年 11 月底被爆静默删除官网“零遥测”承诺、默认开启 PostHog/Axiom 遥测并曾越界读取 `~/.claude.json` 与 `~/.codex/auth.json` 哈希、扫描 Windows 进程命令行及存在假删除（#42299/#42450/#42577/#42119 紧急修补）——已将其**移出最佳实践区并升为高危必加固**。
 
 ## ⚡ 3 分钟极速速查表（一表看完怎么关）
 
@@ -35,7 +36,7 @@
 | 🟢 安全 | **[Notion AI](#notion)** | Settings → Notion AI → 确认 Share data to improve 为关 → Memory → 关闭 Use memories → 关闭 AI Web Search | Use memories 默认开 → 建议关闭；限制 Custom Agents 仅管理员可建 | 无 |
 | 🟡 需调 | **[OpenCode](#opencode)** | 编辑 ~/.config/opencode/opencode.json → 设 share: "disabled" → 禁 Zen 免费模型(仅用 BYOK) → 导出 OPENCODE_DISABLE_* | 无云端记忆；历史存本地 SQLite (opencode.db)，可用 OPENCODE_DB 临时隔离 | `~/.config/opencode/opencode.json` |
 | 🔴 必关 | **[Pi (Coding Agent & pi.ai)](#pi)** | pi.dev: ~/.pi/agent/settings.json 关统计 → pi.dev 无痕启动: pi --no-session → pi.ai: Account Settings 退出训练 | pi.dev 原生支持 --no-session 不写 JSONL；pi.ai 用 !delete 删记录 | `~/.pi/agent/settings.json` |
-| 🟡 需调 | **[T3 Code](#t3code)** | 配置系统级 /etc/t3code/policy.json → 锁死 limits.telemetry: false → 导出 T3CODE_TELEMETRY_ENABLED=false → 同步加固底层 Codex/Claude | 存本地 state.sqlite(默认留92天) → 缩短至 ≤14 天，关 Linked Environments | `/etc/t3code/policy.json (Win: C:\ProgramData\T3Code\policy.json)` |
+| 🔴 必关 | **[T3 Code ⚠️ (2026.11 遥测风波)](#t3code)** | 升至 ≥2026.11.25 补丁版 → 配 policy.json 锁 telemetry:false → 导出 T3CODE_TELEMETRY/OTEL + DNT → 关 Publish agent activity & 切 Supervised | 本地 state.sqlite（旧版删除为假删除，11.25 #42119 才真删）→ 立即升级并缩短留存；关 Sharing & access → Publish agent activity（否则外发项目/会话标题且不受退遥测控制） | `/etc/t3code/policy.json & 环境变量（必配 4 项）` |
 | 🟢 安全 | **[Orca (stablyai/orca)](#orca)** | Settings → Privacy 关匿名统计 → 导出 ORCA_TELEMETRY_DISABLED=1 → 退出后改 orca-data.json 透传子变量 | 无云端记忆；独立 Git Worktree 本地隔离，用完即删 | `Shell & orca-data.json` |
 | 🟢 安全 | **[Chatbox](#chatbox)** | Settings → Privacy 关匿名报告追踪 → Model Provider 关 Improve Network Compatibility → 优先用本地 Ollama 或直连 ZDR API | 纯本地存储无云同步；支持全离线本地 Embedding RAG 知识库 | `%APPDATA%\chatbox\config.json` |
 | 🔴 必关 | **[字节 · Trae IDE & Agent CLI](#trae)** | Settings → Account → 开启 Privacy Mode (隐私模式) → Rules & Memories 关自动记忆 → 配置 .trae/.ignore | 自动 Memory 跨会话沉淀 → 关闭并清 ~/.trae(-cn)/memory/ | `.trae/.ignore & trae_config.yaml` |
@@ -332,13 +333,13 @@ q settings shareCodeWhispererContent false
 ```
 
 <a id="t3code"></a>
-### 🟡 需调 T3 Code
-*Ping Labs 开源多 Agent 控制中心* ｜ [官方文档 / Docs](https://github.com/pingdotgg/t3code)
+### 🔴 必关 T3 Code ⚠️ (2026.11 遥测风波)
+*Ping Labs 开源控制面 · 曾违背零遥测承诺并越界读认证/进程* ｜ [官方文档 / Docs](https://github.com/pingdotgg/t3code/blob/main/docs/user/telemetry.md)
 
-- **关闭路径**：配置系统级 /etc/t3code/policy.json `➔` 锁死 limits.telemetry: false `➔` 导出 T3CODE_TELEMETRY_ENABLED=false `➔` 同步加固底层 Codex/Claude
-- **模型训练**：本体不训练(继承底层 Codex/Claude)；⚠️ 默认开 PostHog/Axiom 遥测!
-- **记忆设置**：存本地 state.sqlite(默认留92天) → 缩短至 ≤14 天，关 Linked Environments
-- **⚠️ 避坑**：Windows 改完环境变量务必重启后台 t3 server；用 t3 policy show 校验生效
+- **关闭路径**：升至 ≥2026.11.25 补丁版 `➔` 配 policy.json 锁 telemetry:false `➔` 导出 T3CODE_TELEMETRY/OTEL + DNT `➔` 关 Publish agent activity & 切 Supervised
+- **模型训练**：本体不训代码，但静默删“零遥测”承诺且默认发 PostHog+ingest.t3.codes+Axiom！2026.11 爆出偷读 ~/.claude.json & ~/.codex/auth.json 哈希(#42299已删)、全机扫描进程命令行(#42577)、假删会话(#42119)与路径泄漏(#42450)
+- **记忆设置**：本地 state.sqlite（旧版删除为假删除，11.25 #42119 才真删）→ 立即升级并缩短留存；关 Sharing & access → Publish agent activity（否则外发项目/会话标题且不受退遥测控制）
+- **⚠️ 避坑**：托管网页端无追踪关闭开关；移动端两项诊断(崩溃+连接追踪)无视服务端策略；Windows 旧版退遥测失效(#42376)；建议防火墙封 ingest.t3.codes 且禁默认 Full Access
 
 <details open><summary>📷 产品真实界面截图（github.com/pingdotgg/t3code）</summary>
 
@@ -346,13 +347,16 @@ q settings shareCodeWhispererContent false
 
 </details>
 
-**⚙️ `/etc/t3code/policy.json (Win: C:\ProgramData\T3Code\policy.json)`**
+**⚙️ `/etc/t3code/policy.json & 环境变量（必配 4 项）`**
 ```json
+// /etc/t3code/policy.json (Win: C:\ProgramData\T3Code\policy.json)
 {
   "schemaVersion": 1,
   "settings": { "enableAgentBrowserAccess": { "value": false, "locked": true } },
   "limits": { "clients": ["desktop", "local-browser"], "telemetry": false }
 }
+// Shell / User Env (4项全设 + 建议防火墙屏蔽 ingest.t3.codes):
+// DO_NOT_TRACK=1  T3CODE_TELEMETRY_ENABLED=false  T3CODE_OTEL_SDK_DISABLED=true  OTEL_SDK_DISABLED=true
 ```
 
 <a id="orca"></a>
@@ -661,7 +665,7 @@ export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1" DISABLE_TELEMETRY="1" CLAUDE
 export GEMINI_TELEMETRY_ENABLED="false" GEMINI_TELEMETRY_LOG_PROMPTS="false"
 export GROK_TELEMETRY_ENABLED=0 GROK_TRACE_UPLOAD=0 GH_TELEMETRY=0
 export OPENCODE_DISABLE_AUTOUPDATE=1 OPENCODE_DISABLE_SHARE=1 OPENCODE_DISABLE_MODELS_FETCH=1
-export PI_TELEMETRY=0 PI_OFFLINE=1 T3CODE_TELEMETRY_ENABLED=false ORCA_TELEMETRY_DISABLED=1
+export PI_TELEMETRY=0 PI_OFFLINE=1 T3CODE_TELEMETRY_ENABLED=false T3CODE_OTEL_SDK_DISABLED=true OTEL_SDK_DISABLED=true ORCA_TELEMETRY_DISABLED=1
 export CODEBUDDY_CODE_ENABLE_TELEMETRY=0 CODEBUDDY_ARTIFACT_ENABLED=false
 export QWEN_USAGE_STATISTICS_ENABLED=false QWEN_TELEMETRY_ENABLED=false
 export MCODE_DISABLE_TELEMETRY=1 KIMI_DISABLE_TELEMETRY=1 KIMI_DISABLE_AUTO_MEMORY=1

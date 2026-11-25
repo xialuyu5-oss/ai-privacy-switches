@@ -11,12 +11,13 @@
 
 ![2026 AI Privacy & Anti-Training Landscape](./assets/svg/ai-privacy-landscape-en.svg)
 
-## 🚨 5 Rules That Save You 90% of Privacy Leaks
+## 🚨 6 Rules That Save You 90% of Privacy Leaks
 1. **Consumer tiers train by default**: Claude (since Aug 2025), GitHub Copilot Free/Pro (since Apr 2026), ChatGPT, Gemini, Grok, Trae, Doubao, Kimi, DeepSeek, ChatGLM, Canva, and Perplexity all opt personal users IN. **Notion AI, NotebookLM, Tencent Suite, Zed, Amp, and local OSS Agents** default to zero training.
 2. **Auth method rules your CLI**: Logging into Claude Code / Codex / Gemini CLI / Antigravity with a personal consumer account still inherits consumer training — use Commercial API / Vertex / Bedrock / Enterprise.
 3. **Disabling Memory ≠ Deleting Memory**: Claude, Doubao, Kimi, WorkBuddy, Perplexity, Poe, and Windsurf keep previously extracted memories until you manually wipe them.
 4. **Watch the `.ignore` illusion**: No `.claudeignore` (use `permissions.deny`), no `.codexignore`, no `.copilotignore` (use Web Content Exclusion), Cline deprecated `.clineignore` (use `PreToolUse` Hook), no `.ampignore`.
 5. **Incognito ≠ Zero Data Retention (ZDR)**: ChatGPT/Claude keep safety logs up to 30 days; Google Gemini extended it to ~2 months in 2026. For strict zero-egress, self-host with Ollama/vLLM.
+6. **Open Source ≠ Trust Blindly (Nov 25, 2026 Alert)**: **T3 Code** was downgraded to **High Risk** and removed from Best Practice after breaking its homepage 'No telemetry' promise and shipping default-on PostHog/Axiom telemetry that hashed local `~/.claude.json` / `~/.codex/auth.json`, scanned Windows process cmdlines, leaked `git.cwd` spans, and soft-deleted threads (emergency patches `#42299`/`#42450`/`#42577`/`#42119`).
 
 ## ⚡ 3-Minute Quick Reference Table
 
@@ -35,7 +36,7 @@
 | 🟢 Safe | **[Notion AI](#notion)** | Settings → Notion AI → Keep Share data to improve OFF → Memory → Use memories: OFF → AI Web Search: OFF | Use memories ON by default → Disable; restrict Custom Agents to admins | None |
 | 🟡 Tune | **[OpenCode](#opencode)** | Edit ~/.config/opencode/opencode.json → Set share: "disabled" → Avoid Zen Free (use BYOK) → Export OPENCODE_DISABLE_* | No cloud memory; local SQLite (opencode.db) — isolate via OPENCODE_DB | `~/.config/opencode/opencode.json` |
 | 🔴 Opt-Out | **[Pi (Coding Agent & pi.ai)](#pi)** | pi.dev: enableInstallTelemetry false → pi.dev incognito: pi --no-session → pi.ai: Account Settings opt-out | pi.dev supports --no-session (zero disk JSONL); pi.ai use !delete | `~/.pi/agent/settings.json` |
-| 🟡 Tune | **[T3 Code](#t3code)** | Create /etc/t3code/policy.json → Lock limits.telemetry: false → Export T3CODE_TELEMETRY_ENABLED=false → Harden underlying Codex/Claude | Local state.sqlite (92d default) → Shorten to ≤14d, disable Linked Environments | `/etc/t3code/policy.json (Win: C:\ProgramData\T3Code\policy.json)` |
+| 🔴 Opt-Out | **[T3 Code ⚠️ (Nov 2026 Telemetry Scandal)](#t3code)** | Update to ≥Nov 25, 2026 patch → Lock policy.json telemetry:false → Export T3CODE_TELEMETRY/OTEL + DNT → Disable Publish activity + Supervised | Local state.sqlite had fake thread deletion until Nov 25 (#42119) → Update now! Disable 'Publish agent activity' (sends project/thread titles & ignores telemetry opt-out) | `/etc/t3code/policy.json & 环境变量（必配 4 项）` |
 | 🟢 Safe | **[Orca (stablyai/orca)](#orca)** | Settings → Privacy → Usage data OFF → Export ORCA_TELEMETRY_DISABLED=1 → Quit Orca → set agentDefaultEnv | No cloud memory; isolated local Git Worktrees, delete after sensitive tasks | `Shell & orca-data.json` |
 | 🟢 Safe | **[Chatbox](#chatbox)** | Settings → Privacy → Reporting OFF → Provider → Improve Network Compat: OFF → Use Local Ollama or direct ZDR API | 100% local storage (no auto cloud sync); supports offline local RAG | `%APPDATA%\chatbox\config.json` |
 | 🔴 Opt-Out | **[ByteDance · Trae IDE & CLI](#trae)** | Settings → Account → Privacy Mode: ON → Rules & Memories → Memory: OFF → Add .trae/.ignore | Auto Memory ON → Turn OFF & delete ~/.trae(-cn)/memory/ | `.trae/.ignore & trae_config.yaml` |
@@ -332,13 +333,13 @@ q settings shareCodeWhispererContent false
 ```
 
 <a id="t3code"></a>
-### 🟡 Tune T3 Code
-*Ping Labs OSS Multi-Agent Coding GUI* ｜ [官方文档 / Docs](https://github.com/pingdotgg/t3code)
+### 🔴 Opt-Out T3 Code ⚠️ (Nov 2026 Telemetry Scandal)
+*Ping Labs OSS Control Plane · Broke 'No Telemetry' Promise* ｜ [官方文档 / Docs](https://github.com/pingdotgg/t3code/blob/main/docs/user/telemetry.md)
 
-- **Path**：Create /etc/t3code/policy.json `➔` Lock limits.telemetry: false `➔` Export T3CODE_TELEMETRY_ENABLED=false `➔` Harden underlying Codex/Claude
-- **Training**：Does not train (inherits Codex/Claude); ⚠️ PostHog/Axiom telemetry ON by default!
-- **Memory**：Local state.sqlite (92d default) → Shorten to ≤14d, disable Linked Environments
-- **⚠️ Gotcha**：Restart background t3 server on Windows after env changes; verify with `t3 policy show`
+- **Path**：Update to ≥Nov 25, 2026 patch `➔` Lock policy.json telemetry:false `➔` Export T3CODE_TELEMETRY/OTEL + DNT `➔` Disable Publish activity + Supervised
+- **Training**：No model training, but silently removed 'No telemetry' promise & shipped default-on PostHog + ingest.t3.codes + Axiom! Nov 2026 exposed reading ~/.claude.json & ~/.codex/auth.json (#42299), scanning all process cmdlines (#42577), fake delete (#42119) & git.cwd leaks (#42450)
+- **Memory**：Local state.sqlite had fake thread deletion until Nov 25 (#42119) → Update now! Disable 'Publish agent activity' (sends project/thread titles & ignores telemetry opt-out)
+- **⚠️ Gotcha**：Hosted web app has NO tracing toggle; mobile crash & connection traces ignore server policy; old Windows app ignored opt-out (#42376). Block ingest.t3.codes & avoid default Full Access
 
 <details open><summary>📷 Real Product Screenshot（github.com/pingdotgg/t3code）</summary>
 
@@ -346,13 +347,16 @@ q settings shareCodeWhispererContent false
 
 </details>
 
-**⚙️ `/etc/t3code/policy.json (Win: C:\ProgramData\T3Code\policy.json)`**
+**⚙️ `/etc/t3code/policy.json & 环境变量（必配 4 项）`**
 ```json
+// /etc/t3code/policy.json (Win: C:\ProgramData\T3Code\policy.json)
 {
   "schemaVersion": 1,
   "settings": { "enableAgentBrowserAccess": { "value": false, "locked": true } },
   "limits": { "clients": ["desktop", "local-browser"], "telemetry": false }
 }
+// Shell / User Env (4项全设 + 建议防火墙屏蔽 ingest.t3.codes):
+// DO_NOT_TRACK=1  T3CODE_TELEMETRY_ENABLED=false  T3CODE_OTEL_SDK_DISABLED=true  OTEL_SDK_DISABLED=true
 ```
 
 <a id="orca"></a>
@@ -661,7 +665,7 @@ export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1" DISABLE_TELEMETRY="1" CLAUDE
 export GEMINI_TELEMETRY_ENABLED="false" GEMINI_TELEMETRY_LOG_PROMPTS="false"
 export GROK_TELEMETRY_ENABLED=0 GROK_TRACE_UPLOAD=0 GH_TELEMETRY=0
 export OPENCODE_DISABLE_AUTOUPDATE=1 OPENCODE_DISABLE_SHARE=1 OPENCODE_DISABLE_MODELS_FETCH=1
-export PI_TELEMETRY=0 PI_OFFLINE=1 T3CODE_TELEMETRY_ENABLED=false ORCA_TELEMETRY_DISABLED=1
+export PI_TELEMETRY=0 PI_OFFLINE=1 T3CODE_TELEMETRY_ENABLED=false T3CODE_OTEL_SDK_DISABLED=true OTEL_SDK_DISABLED=true ORCA_TELEMETRY_DISABLED=1
 export CODEBUDDY_CODE_ENABLE_TELEMETRY=0 CODEBUDDY_ARTIFACT_ENABLED=false
 export QWEN_USAGE_STATISTICS_ENABLED=false QWEN_TELEMETRY_ENABLED=false
 export MCODE_DISABLE_TELEMETRY=1 KIMI_DISABLE_TELEMETRY=1 KIMI_DISABLE_AUTO_MEMORY=1
