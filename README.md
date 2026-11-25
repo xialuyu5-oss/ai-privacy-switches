@@ -3,9 +3,9 @@
 [![Live Interactive Site](https://img.shields.io/badge/🌐_Live_Interactive_App-GitHub_Pages-2563EB?style=for-the-badge)](https://xialuyu5-oss.github.io/ai-privacy-switches/?lang=en) [![中文版](https://img.shields.io/badge/文档-中文版-0F172A?style=for-the-badge)](./README.zh-CN.md) [![License: MIT](https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-Screenshots_Welcome-D97706?style=for-the-badge)](./CONTRIBUTING.md)
 
 > **Live Interactive Web App (ZH/EN + Search + Script Builder):** https://xialuyu5-oss.github.io/ai-privacy-switches/?lang=en (or open [`index.html`](./index.html) offline)
-> **Streamlined Office Downloads (with all 23 real screenshots):** [📊 Excel Quick Guide (.xlsx)](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.xlsx) ｜ [📽️ Presentation Deck (.pptx, 33 slides)](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.pptx)
+> **Streamlined Office Downloads (with all 23 real screenshots):** [📊 Excel Quick Guide (.xlsx)](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.xlsx) ｜ [📽️ Presentation Deck (.pptx, 35 slides)](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.pptx)
 >
-> **3-second scannable opt-out guide — zero fluff.** Covers **26 product families · 68 AI tools (28 actionable cards) · 23 verified real product UI screenshots · copy-paste TOML/JSON/Env hardening configs** (Verified: Nov 25, 2026).
+> **3-second scannable opt-out guide — zero fluff.** Covers **26 product families · 68 AI tools (30 actionable cards) · 23 verified real product UI screenshots · copy-paste TOML/JSON/Env hardening configs** (Verified: Nov 25, 2026).
 
 ## 🗺️ Privacy & Anti-Training Landscape (26 Families)
 
@@ -17,7 +17,7 @@
 3. **Disabling Memory ≠ Deleting Memory**: Claude, Doubao, Kimi, WorkBuddy, Perplexity, Poe, and Windsurf keep previously extracted memories until you manually wipe them.
 4. **Watch the `.ignore` illusion**: No `.claudeignore` (use `permissions.deny`), no `.codexignore`, no `.copilotignore` (use Web Content Exclusion), Cline deprecated `.clineignore` (use `PreToolUse` Hook), no `.ampignore`.
 5. **Incognito ≠ Zero Data Retention (ZDR)**: ChatGPT/Claude keep safety logs up to 30 days; Google Gemini extended it to ~2 months in 2026. For strict zero-egress, self-host with Ollama/vLLM.
-6. **Open Source ≠ Trust Blindly (Nov 25, 2026 Alert)**: **T3 Code** was downgraded to **High Risk** and removed from Best Practice after breaking its homepage 'No telemetry' promise and shipping default-on PostHog/Axiom telemetry that hashed local `~/.claude.json` / `~/.codex/auth.json`, scanned Windows process cmdlines, leaked `git.cwd` spans, and soft-deleted threads (emergency patches `#42299`/`#42450`/`#42577`/`#42119`).
+6. **Open Source / Zero-Training ≠ Automatically Safe (2026 Security Audit)**: **T3 Code** (Nov 25 broken no-telemetry promise / auth-file hashing / process scan), **OpenClaw** (ClawBleed RCE / ClawHavoc 1,000+ malicious skills / Meta & Microsoft bans), **OpenCode Console** (Oct 16 leaked provider keys), **Cline/Roo/Kilo** (Feb npm 2.3.0 Clinejection & telemetry bugs), and **Notion AI** (Oct–Nov Fireworks AI transcript leak) have all been audited and reclassified accordingly.
 
 ## ⚡ 3-Minute Quick Reference Table
 
@@ -33,8 +33,8 @@
 | 🔴 Opt-Out | **[Cursor](#cursor)** | Ctrl/Cmd+Shift+J → Cursor Settings → General → Privacy → Privacy Mode (Legacy): ON → Add .cursorignore | Auto Memories deprecated & removed in v2.1+; use auditable .cursor/rules/*.mdc | `.cursorignore & ~/.cursor/cli-config.json` |
 | 🔴 Opt-Out | **[Cognition / Windsurf & Devin](#windsurf_devin)** | windsurf.com/settings → ZDR ON → Cascade → Customizations → Memories OFF → app.devin.ai → Data Controls OFF | Windsurf Cascade Auto-Memories ON → Disable & clear ~/.codeium/windsurf/memories/ | `Windsurf settings.json & ~/.config/devin/config.json` |
 | 🔴 Opt-Out | **[Canva (Magic Studio)](#canva)** | Profile → Settings → Your account → Privacy controls → 2x AI-powered learning: OFF → AI personalization: OFF | AI-generated content personalization ON → Turn OFF | None |
-| 🟢 Safe | **[Notion AI](#notion)** | Settings → Notion AI → Keep Share data to improve OFF → Memory → Use memories: OFF → AI Web Search: OFF | Use memories ON by default → Disable; restrict Custom Agents to admins | None |
-| 🟡 Tune | **[OpenCode](#opencode)** | Edit ~/.config/opencode/opencode.json → Set share: "disabled" → Avoid Zen Free (use BYOK) → Export OPENCODE_DISABLE_* | No cloud memory; local SQLite (opencode.db) — isolate via OPENCODE_DB | `~/.config/opencode/opencode.json` |
+| 🟡 Tune | **[Notion AI ⚠️ (Oct 2026 Vendor Breach)](#notion)** | Settings → Notion AI → Keep Share data to improve OFF → Memory → Use memories: OFF → Never paste API keys / secrets | Use memories ON by default → Disable; restrict Custom Agents & rotate any pasted credentials | None |
+| 🟡 Tune | **[OpenCode ⚠️ (Oct 2026 Console Breach)](#opencode)** | Never store keys in OpenCode Console → Edit ~/.config/opencode/opencode.json → Lock share: "disabled" & no Zen Free → Export OPENCODE_DISABLE_* | No cloud memory; local SQLite (opencode.db) — isolate via OPENCODE_DB | `~/.config/opencode/opencode.json` |
 | 🔴 Opt-Out | **[Pi (Coding Agent & pi.ai)](#pi)** | pi.dev: enableInstallTelemetry false → pi.dev incognito: pi --no-session → pi.ai: Account Settings opt-out | pi.dev supports --no-session (zero disk JSONL); pi.ai use !delete | `~/.pi/agent/settings.json` |
 | 🔴 Opt-Out | **[T3 Code ⚠️ (Nov 2026 Telemetry Scandal)](#t3code)** | Update to ≥Nov 25, 2026 patch → Lock policy.json telemetry:false → Export T3CODE_TELEMETRY/OTEL + DNT → Disable Publish activity + Supervised | Local state.sqlite had fake thread deletion until Nov 25 (#42119) → Update now! Disable 'Publish agent activity' (sends project/thread titles & ignores telemetry opt-out) | `/etc/t3code/policy.json & 环境变量（必配 4 项）` |
 | 🟢 Safe | **[Orca (stablyai/orca)](#orca)** | Settings → Privacy → Usage data OFF → Export ORCA_TELEMETRY_DISABLED=1 → Quit Orca → set agentDefaultEnv | No cloud memory; isolated local Git Worktrees, delete after sensitive tasks | `Shell & orca-data.json` |
@@ -48,7 +48,9 @@
 | 🔴 Opt-Out | **[MiniMax · mcode / Agent / Hailuo](#minimax)** | Agent: Personalization → Memory OFF → Memory summary → Manage → Clear → mcode: config.yaml permissionMode: default | Agent Proactive Memory keeps old items when off → Disable & clear summary | `~/.minimax/config.yaml` |
 | 🔴 Opt-Out | **[Moonshot AI / Kimi Suite](#kimi)** | Email support@moonshot.cn to opt out → Settings → Memory toggle: OFF → Clear Memory Space files → Edit ~/.kimi-code/config.toml | Auto-writes to Memory Space (persists when off), no Incognito → Disable & wipe Memory Space | `~/.kimi-code/config.toml` |
 | 🔴 Opt-Out | **[DeepSeek & Harness (dsh)](#deepseek)** | Web/App: Settings → Data controls → Improve the model: OFF → dsh: cordis.patch.yml DISABLED → Self-host weights via Ollama | No cross-chat Memory or Incognito on Web; dsh OTel defaults to FEEDBACK_ONLY | `~/.dsh/profiles/web/cordis.patch.yml` |
-| 🟢 Safe | **[OSS Coding Agent Cluster (6 Tools)](#oss_agents)** | All 6 local BYOK zero-training ✅ → Disable Cline/Kilo telemetry → Aider: analytics-disable & gitignore → Goose memory OFF · OpenClaw update OFF | No hidden cloud memory; ignore Aider's plaintext .aider.chat.history.md in Git | `多工具配置文件汇总` |
+| 🟢 Safe | **[Clean OSS Agents (Aider · Block Goose)](#oss_clean)** | Aider: analytics-disable & gitignore: true → Goose: decline first-run prompt + GOOSE_TELEMETRY_OFF=1 → Pair with local Ollama or ZDR API | No cloud memory; enable gitignore: true in Aider so plaintext .aider.chat.history.md never commits to Git | `~/.aider.conf.yml & Goose Env` |
+| 🟡 Tune | **[Cline / Roo Code / Kilo Code ⚠️](#cline_roo_kilo)** | Cline: avoid npm 2.3.0, set telemetryOptOut:true → Roo: avoid Roo Cloud + patch CVE-2025-58372 → Kilo: telemetry off + firewall-audit egress | No cloud memory if local-only; never log into Roo Cloud sync | `Cline / Kilo 配置与环境变量` |
+| 🔴 Opt-Out | **[OpenClaw ⚠️ (2026 Major Security Crises)](#openclaw)** | Run ONLY inside strict container/VM → Upgrade to post-Trail-of-Bits hardened build → Zero untrusted ClawHub marketplace skills → Lock gateway auth & disable public bind | Persistent host memory + full user privileges → NEVER run bare-metal on machines holding prod keys or source code | `~/.openclaw/openclaw.json & 容器隔离` |
 | 🔴 Opt-Out | **[Commercial IDEs & Cloud Builders (6 Tools)](#comm_ide)** | JetBrains: Data Sharing → uncheck all → v0 / Lovable / Replit: Training OFF + Private → Zed telemetry OFF · Amp private | JetBrains uses .junie/guidelines.md; never put secrets in Replit's replit.md | `~/.config/zed/settings.json & ~/.config/amp/settings.json` |
 | 🔴 Opt-Out | **[Research & General Web AI (4 Tools)](#web_research)** | Perplexity: AI Data Retention OFF + Clear Memory → NotebookLM: Zero training (never click feedback) → Manus: Opt-out + Private · Poe: Solid-shield only | Perplexity/Poe keep old memory when toggled off; NotebookLM isolates per notebook | None |
 
@@ -283,22 +285,22 @@ q settings shareCodeWhispererContent false
 </details>
 
 <a id="notion"></a>
-### 🟢 Safe Notion AI
-*Notion Web / Desktop / Mobile* ｜ [官方文档 / Docs](https://www.notion.com/help/notion-ai-security-practices)
+### 🟡 Tune Notion AI ⚠️ (Oct 2026 Vendor Breach)
+*Notion Web / Desktop / Mobile · Zero-training, Fireworks AI breach* ｜ [官方文档 / Docs](https://www.notion.com/help/notion-ai-security-practices)
 
-- **Path**：Settings → Notion AI `➔` Keep Share data to improve OFF `➔` Memory → Use memories: OFF `➔` AI Web Search: OFF
-- **Training**：All plans (incl. Free) exclude model training by default ✅; Enterprise ZDR
-- **Memory**：Use memories ON by default → Disable; restrict Custom Agents to admins
-- **⚠️ Gotcha**：Non-Enterprise has no UI kill-switch; email team@makenotion.com to disable AI UI
+- **Path**：Settings → Notion AI `➔` Keep Share data to improve OFF `➔` Memory → Use memories: OFF `➔` Never paste API keys / secrets
+- **Training**：Zero model training by default ✅; ⚠️ Oct–Nov 2026 breach at subprocessor Fireworks AI exposed Notion AI transcripts & pasted API keys for <1% of workspaces
+- **Memory**：Use memories ON by default → Disable; restrict Custom Agents & rotate any pasted credentials
+- **⚠️ Gotcha**：Subprocessor breaches break ZDR assumptions; non-Enterprise kill-switch requires emailing team@makenotion.com
 
 <a id="opencode"></a>
-### 🟡 Tune OpenCode
-*Anomaly Co. (ex-SST) CLI & Desktop* ｜ [官方文档 / Docs](https://opencode.ai/docs/config)
+### 🟡 Tune OpenCode ⚠️ (Oct 2026 Console Breach)
+*Anomaly Co. (ex-SST) · Local BYOK only; avoid hosted Console* ｜ [官方文档 / Docs](https://opencode.ai/docs/config)
 
-- **Path**：Edit ~/.config/opencode/opencode.json `➔` Set share: "disabled" `➔` Avoid Zen Free (use BYOK) `➔` Export OPENCODE_DISABLE_*
-- **Training**：Local/BYOK/Paid Zen do not train; ⚠️ Zen Free promo models allow upstream collection!
+- **Path**：Never store keys in OpenCode Console `➔` Edit ~/.config/opencode/opencode.json `➔` Lock share: "disabled" & no Zen Free `➔` Export OPENCODE_DISABLE_*
+- **Training**：Local CLI/BYOK never trains ✅; ⚠️ Oct 16, 2026 hosted Console breach leaked ~1.4% linked provider API keys (unauthorized billing); Zen Free collects data; PostHog/Honeycomb telemetry debated
 - **Memory**：No cloud memory; local SQLite (opencode.db) — isolate via OPENCODE_DB
-- **⚠️ Gotcha**：share defaults to 'manual' (/share publishes to opncd.ai)! Lock share: 'disabled'
+- **⚠️ Gotcha**：If you ever linked keys in OpenCode Console, revoke & rotate them at your provider immediately! Lock share: disabled
 
 <details open><summary>📷 Real Product Screenshot（github.com/anomalyco/opencode）</summary>
 
@@ -605,14 +607,32 @@ disabled = ["WebSearch", "FetchURL"]
 # Shell: export DSH_TELEMETRY_DISABLED=1 DSH_TELEMETRY_MODE=DISABLED
 ```
 
-<a id="oss_agents"></a>
-### 🟢 Safe OSS Coding Agent Cluster (6 Tools)
-*Cline · Roo Code · Kilo Code · Aider · Goose · OpenClaw* ｜ [官方文档 / Docs](https://docs.cline.bot)
+<a id="oss_clean"></a>
+### 🟢 Safe Clean OSS Agents (Aider · Block Goose)
+*Aider · Block Goose (Zero 2026 scandals · Opt-in telemetry)* ｜ [官方文档 / Docs](https://block.github.io/goose/)
 
-- **Path**：All 6 local BYOK zero-training ✅ `➔` Disable Cline/Kilo telemetry `➔` Aider: analytics-disable & gitignore `➔` Goose memory OFF · OpenClaw update OFF
-- **Training**：All 6 clients perform zero model training ✅ (depends solely on your BYOK / Ollama)
-- **Memory**：No hidden cloud memory; ignore Aider's plaintext .aider.chat.history.md in Git
-- **⚠️ Gotcha**：Cline deprecated .clineignore (use PreToolUse Hook); avoid Roo Cloud sync
+- **Path**：Aider: analytics-disable & gitignore: true `➔` Goose: decline first-run prompt + GOOSE_TELEMETRY_OFF=1 `➔` Pair with local Ollama or ZDR API
+- **Training**：100% local BYOK zero-training ✅; Goose prompts explicitly for opt-in telemetry; zero major 2026 breaches or telemetry scandals
+- **Memory**：No cloud memory; enable gitignore: true in Aider so plaintext .aider.chat.history.md never commits to Git
+- **⚠️ Gotcha**：Still audit third-party MCP servers; set both GOOSE_TELEMETRY_OFF=1 and GOOSE_TELEMETRY_ENABLED=false
+
+**⚙️ `~/.aider.conf.yml & Goose Env`**
+```yaml
+# Aider (~/.aider.conf.yml):
+analytics-disable: true
+gitignore: true
+# Block Goose (~/.zshrc & ~/.config/goose/config.yaml):
+# export GOOSE_TELEMETRY_OFF=1 GOOSE_TELEMETRY_ENABLED=false
+```
+
+<a id="cline_roo_kilo"></a>
+### 🟡 Tune Cline / Roo Code / Kilo Code ⚠️
+*OSS IDE Agents · 2026 Supply-Chain & Telemetry Incidents* ｜ [官方文档 / Docs](https://docs.cline.bot)
+
+- **Path**：Cline: avoid npm 2.3.0, set telemetryOptOut:true `➔` Roo: avoid Roo Cloud + patch CVE-2025-58372 `➔` Kilo: telemetry off + firewall-audit egress
+- **Training**：Clients do not train ✅; ⚠️ 2026 caveats: Cline Feb 2026 'Clinejection' npm CLI 2.3.0 compromise (VS Code ext safe); Roo CloudTelemetryClient bypass reports; Kilo unexpected Cloudflare egress reports
+- **Memory**：No cloud memory if local-only; never log into Roo Cloud sync
+- **⚠️ Gotcha**：Cline deprecated .clineignore (use PreToolUse Hook); Roo had CVE-2025-58372 (.code-workspace RCE); disable auto-approve
 
 <details open><summary>📷 Real Product Screenshot（github.com/cline/cline）</summary>
 
@@ -620,12 +640,25 @@ disabled = ["WebSearch", "FetchURL"]
 
 </details>
 
-**⚙️ `多工具配置文件汇总`**
-```yaml
-# Aider (~/.aider.conf.yml): analytics-disable: true | gitignore: true
-# Goose (~/.config/goose/config.yaml): GOOSE_TELEMETRY_ENABLED: false
-# Cline (~/.cline/data/settings/global-settings.json): { "telemetryOptOut": true }
-# OpenClaw (~/.openclaw/openclaw.json): update.checkOnStart=false, telemetry.enabled=false
+**⚙️ `Cline / Kilo 配置与环境变量`**
+```json
+// Cline (~/.cline/data/settings/global-settings.json): { "telemetryOptOut": true }
+// Kilo CLI: export KILO_TELEMETRY_LEVEL=off  (高敏仓建议加本机出口防火墙白名单)
+```
+
+<a id="openclaw"></a>
+### 🔴 Opt-Out OpenClaw ⚠️ (2026 Major Security Crises)
+*Ex-Clawdbot/Moltbot · ClawBleed RCE, ClawHavoc & Corp Bans* ｜ [官方文档 / Docs](https://openclaw.ai)
+
+- **Path**：Run ONLY inside strict container/VM `➔` Upgrade to post-Trail-of-Bits hardened build `➔` Zero untrusted ClawHub marketplace skills `➔` Lock gateway auth & disable public bind
+- **Training**：Local runtime does not train, but suffered massive 2026 crises: CVE-2026-25253 (ClawBleed 1-click RCE), ClawHavoc (1,000+ infostealer ClawHub skills), Claw Chain escapes & exposed instances — banned by Meta & Microsoft!
+- **Memory**：Persistent host memory + full user privileges → NEVER run bare-metal on machines holding prod keys or source code
+- **⚠️ Gotcha**：Even after Trail of Bits audit & gateway hardening, enforce strict VM/container isolation & ban untrusted ClawHub skills
+
+**⚙️ `~/.openclaw/openclaw.json & 容器隔离`**
+```json
+// ~/.openclaw/openclaw.json（务必在无宿主机密钥的 Docker/VM 中运行，切勿暴露端口到公网）
+{ "update": { "checkOnStart": false }, "telemetry": { "enabled": false }, "gateway": { "bind": "127.0.0.1", "requireAuth": true } }
 ```
 
 <a id="comm_ide"></a>
@@ -670,7 +703,7 @@ export CODEBUDDY_CODE_ENABLE_TELEMETRY=0 CODEBUDDY_ARTIFACT_ENABLED=false
 export QWEN_USAGE_STATISTICS_ENABLED=false QWEN_TELEMETRY_ENABLED=false
 export MCODE_DISABLE_TELEMETRY=1 KIMI_DISABLE_TELEMETRY=1 KIMI_DISABLE_AUTO_MEMORY=1
 export DSH_TELEMETRY_DISABLED=1 DSH_TELEMETRY_MODE=DISABLED
-export AIDER_ANALYTICS_DISABLE=true GOOSE_TELEMETRY_ENABLED=false KILO_TELEMETRY_LEVEL=off OPENCLAW_NO_AUTO_UPDATE=1
+export AIDER_ANALYTICS_DISABLE=true GOOSE_TELEMETRY_OFF=1 GOOSE_TELEMETRY_ENABLED=false KILO_TELEMETRY_LEVEL=off OPENCLAW_NO_AUTO_UPDATE=1
 ```
 
 ## 🔍 Existing Guides & Prior Art Comparison

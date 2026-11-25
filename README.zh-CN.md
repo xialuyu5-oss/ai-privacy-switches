@@ -3,9 +3,9 @@
 [![Live Interactive Site](https://img.shields.io/badge/🌐_在线交互版-GitHub_Pages-2563EB?style=for-the-badge)](https://xialuyu5-oss.github.io/ai-privacy-switches/) [![English](https://img.shields.io/badge/Docs-English-0F172A?style=for-the-badge)](./README.md) [![License: MIT](https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-欢迎补图-D97706?style=for-the-badge)](./CONTRIBUTING.md)
 
 > **在线交互网页版（中英切换 + 筛选 + 一键生成脚本）：** https://xialuyu5-oss.github.io/ai-privacy-switches/ （本地直接打开 [`index.html`](./index.html)）
-> **极简办公下载版（含全部 23 张产品真实截图）：** [📊 下载 Excel 速查手册](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.xlsx) ｜ [📽️ 下载 PPT 演示版（33 页）](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.pptx)
+> **极简办公下载版（含全部 23 张产品真实截图）：** [📊 下载 Excel 速查手册](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.xlsx) ｜ [📽️ 下载 PPT 演示版（35 页）](./exports/AI_Agent_隐私记忆与防训练开关全手册_2026.pptx)
 >
-> **3 秒看懂怎么关，拒绝长篇大论！** 覆盖 **26 大产品家族 · 68 款工具（28 张实操卡片）· 23 张真实产品界面截图 · 全部必改 TOML/JSON/环境变量**（数据核实基准日：2026-11-25）。
+> **3 秒看懂怎么关，拒绝长篇大论！** 覆盖 **26 大产品家族 · 68 款工具（30 张实操卡片）· 23 张真实产品界面截图 · 全部必改 TOML/JSON/环境变量**（数据核实基准日：2026-11-25）。
 
 ## 🗺️ 一图看懂 26 家 AI 工具默认训练风险全景
 
@@ -17,7 +17,7 @@
 3. **关记忆 ≠ 删旧记忆**：Claude、豆包、Kimi（记忆空间）、WorkBuddy、Perplexity、Poe、Windsurf 关完开关后**必须再手动清空**。
 4. **`.ignore` 并非处处有效**：Claude Code 无 `.claudeignore`、Codex 无 `.codexignore`、Copilot 无 `.copilotignore`、Cline 已弃用 `.clineignore`、Amp 无 `.ampignore`。
 5. **无痕 ≠ 零留存（ZDR）**：ChatGPT/Claude 无痕留≤30天安全日志，Gemini 2026 已延至约 2 个月；真正零出网请用本地 Ollama/vLLM。
-6. **开源客户端 ≠ 天然免审计（2026.11.25 警示）**：**T3 Code** 虽不直接拿代码训练，但 2026 年 11 月底被爆静默删除官网“零遥测”承诺、默认开启 PostHog/Axiom 遥测并曾越界读取 `~/.claude.json` 与 `~/.codex/auth.json` 哈希、扫描 Windows 进程命令行及存在假删除（#42299/#42450/#42577/#42119 紧急修补）——已将其**移出最佳实践区并升为高危必加固**。
+6. **开源 / 零训练 ≠ 天然免审计（2026 安全复盘）**：**T3 Code**（11.25 违背零遥测/偷读认证哈希/扫描进程）、**OpenClaw**（ClawBleed 一键 RCE/ClawHavoc 千余恶意技能/遭 Meta 与微软禁令）、**OpenCode Console**（10.16 托管 Key 泄密）、**Cline/Roo/Kilo**（2 月 npm 2.3.0 供应链投毒与遥测争议）及 **Notion AI**（10 月第三方 Fireworks AI 聊天记录外泄）均已按 2026-11 实测事实重新降级分栏。
 
 ## ⚡ 3 分钟极速速查表（一表看完怎么关）
 
@@ -33,8 +33,8 @@
 | 🔴 必关 | **[Cursor](#cursor)** | Ctrl/Cmd+Shift+J 打开 Cursor Settings → General → Privacy → 开启 Privacy Mode (Legacy) → 配置 .cursorignore | 原生自动 Memories 已在 v2.1+ 正式弃用移除，改用静态 .cursor/rules/*.mdc | `.cursorignore & ~/.cursor/cli-config.json` |
 | 🔴 必关 | **[Cognition / Windsurf & Devin](#windsurf_devin)** | windsurf.com/settings → Privacy 开 ZDR → Cascade → Customizations 关 Memories → app.devin.ai → Data Controls 关训练 | Windsurf Cascade Auto-Memories 默认开 → 关闭并清 ~/.codeium/windsurf/memories/ | `Windsurf settings.json & ~/.config/devin/config.json` |
 | 🔴 必关 | **[Canva (Magic Studio)](#canva)** | 右上角头像 → Settings → Your account → Privacy controls → 关闭 2 项 AI learn 开关 → 关闭 AI personalization | AI-generated content 个性化默认开 → 关闭 | 无 |
-| 🟢 安全 | **[Notion AI](#notion)** | Settings → Notion AI → 确认 Share data to improve 为关 → Memory → 关闭 Use memories → 关闭 AI Web Search | Use memories 默认开 → 建议关闭；限制 Custom Agents 仅管理员可建 | 无 |
-| 🟡 需调 | **[OpenCode](#opencode)** | 编辑 ~/.config/opencode/opencode.json → 设 share: "disabled" → 禁 Zen 免费模型(仅用 BYOK) → 导出 OPENCODE_DISABLE_* | 无云端记忆；历史存本地 SQLite (opencode.db)，可用 OPENCODE_DB 临时隔离 | `~/.config/opencode/opencode.json` |
+| 🟡 需调 | **[Notion AI ⚠️ (10月子处理商外泄)](#notion)** | Settings → Notion AI → 确认 Share data to improve 为关 → Memory → 关闭 Use memories → 绝不在对话粘贴 API Key / 密码 | Use memories 默认开 → 关闭；限制 Custom Agents 仅管理员可建，并排查是否曾粘贴密钥 | 无 |
+| 🟡 需调 | **[OpenCode ⚠️ (10月Console泄密)](#opencode)** | 严禁在 OpenCode Console 托管 Key → 编辑 ~/.config/opencode/opencode.json → 锁死 share: "disabled" & 禁 Zen 免费 → 导出 OPENCODE_DISABLE_* | 无云端记忆；历史存本地 SQLite (opencode.db)，可用 OPENCODE_DB 临时隔离 | `~/.config/opencode/opencode.json` |
 | 🔴 必关 | **[Pi (Coding Agent & pi.ai)](#pi)** | pi.dev: ~/.pi/agent/settings.json 关统计 → pi.dev 无痕启动: pi --no-session → pi.ai: Account Settings 退出训练 | pi.dev 原生支持 --no-session 不写 JSONL；pi.ai 用 !delete 删记录 | `~/.pi/agent/settings.json` |
 | 🔴 必关 | **[T3 Code ⚠️ (2026.11 遥测风波)](#t3code)** | 升至 ≥2026.11.25 补丁版 → 配 policy.json 锁 telemetry:false → 导出 T3CODE_TELEMETRY/OTEL + DNT → 关 Publish agent activity & 切 Supervised | 本地 state.sqlite（旧版删除为假删除，11.25 #42119 才真删）→ 立即升级并缩短留存；关 Sharing & access → Publish agent activity（否则外发项目/会话标题且不受退遥测控制） | `/etc/t3code/policy.json & 环境变量（必配 4 项）` |
 | 🟢 安全 | **[Orca (stablyai/orca)](#orca)** | Settings → Privacy 关匿名统计 → 导出 ORCA_TELEMETRY_DISABLED=1 → 退出后改 orca-data.json 透传子变量 | 无云端记忆；独立 Git Worktree 本地隔离，用完即删 | `Shell & orca-data.json` |
@@ -48,7 +48,9 @@
 | 🔴 必关 | **[MiniMax · mcode / Agent / 海螺](#minimax)** | Agent: Settings → Personalization 关 Memory & Proactive → Memory summary → Manage 清空 → mcode: ~/.minimax/config.yaml 锁 default | MiniMax Agent 支持 Proactive Memory（关不删旧）→ 关闭并清空摘要，会话用 /memory | `~/.minimax/config.yaml` |
 | 🔴 必关 | **[月之暗面 / Kimi 系列](#kimi)** | 发邮件 support@moonshot.cn 申请退训 → 设置 → 个性化 → 关“通过会话产生记忆” → 进“记忆空间”清空旧条目 → 编辑 ~/.kimi-code/config.toml | 自动整理写入“记忆空间”（关不删旧），无原生无痕对话 → 关记忆+清空记忆空间 | `~/.kimi-code/config.toml` |
 | 🔴 必关 | **[DeepSeek & Harness (dsh)](#deepseek)** | Web/App: 设置 → 数据管理 → 关“数据用于优化体验 / Improve the model” → dsh: cordis.patch.yml 设 DISABLED → 高敏源码用本地自托管 Ollama | C 端无跨会话长期记忆、无无痕模式；dsh 为插件化本地记忆，OTel 默认 FEEDBACK_ONLY | `~/.dsh/profiles/web/cordis.patch.yml` |
-| 🟢 安全 | **[开源 Coding Agent 集群 (6 款)](#oss_agents)** | 全系本地 BYOK 零训练 ✅ → Cline/Kilo 关 PostHog/产品遥测 → Aider 开 gitignore:true 防提交聊天记录 → Goose 关 memory · OpenClaw 关更新检查 | 无黑盒云端画像；Aider 明文写 .aider.chat.history.md 须防误 git commit | `多工具配置文件汇总` |
+| 🟢 安全 | **[纯净开源 Agent (Aider · Goose)](#oss_clean)** | Aider: ~/.aider.conf.yml 设 analytics-disable & gitignore → Goose: 首次拒绝遥测 + 设 GOOSE_TELEMETRY_OFF=1 → 配合本地 Ollama 或商用 ZDR API | 无黑盒云端画像；Aider 明文写 .aider.chat.history.md 务必配 gitignore: true 防误提交 | `~/.aider.conf.yml & Goose Env` |
+| 🟡 需调 | **[Cline / Roo Code / Kilo Code ⚠️](#cline_roo_kilo)** | Cline: 避开旧版 npm 2.3.0，配 telemetryOptOut:true → Roo Code: 禁登录 Roo Cloud + 升补丁防工作区 RCE → Kilo Code: 关遥测并监控出网流量 | 无黑盒云端记忆；Roo Code 切勿登录 Roo Cloud 同步会话 | `Cline / Kilo 配置与环境变量` |
+| 🔴 必关 | **[OpenClaw ⚠️ (2026 多起高危安全危机)](#openclaw)** | 仅在强隔离容器/虚拟机内运行 → 强制升至 Trail of Bits 审计后新版 → 严禁安装未经审计的 ClawHub 技能 → 关公网暴露与自动更新检查 | 具备宿主机持久记忆与全权限执行能力 → 绝不可直接在存有公司源码/密钥的宿主机裸跑 | `~/.openclaw/openclaw.json & 容器隔离` |
 | 🔴 必关 | **[商业 IDE & 云端构建 (6 款)](#comm_ide)** | JetBrains: System Settings → Data Sharing 全取消 → v0 / Lovable / Replit 关 Model Training & 设 Private → Zed 关遥测 · Amp 锁 visibility: private | JetBrains 用 .junie/guidelines.md；Replit 自动写 replit.md 切勿放密钥 | `~/.config/zed/settings.json & ~/.config/amp/settings.json` |
 | 🔴 必关 | **[研究与通用 Web AI (4 款)](#web_research)** | Perplexity: Preferences → 关 AI Data Retention & 清 Memory → NotebookLM: 默认零训(绝不点赞/踩) → Manus: 退训+禁公开 · Poe: 只选全实心盾 Bot | Perplexity/Poe 关开关不删旧记忆须手动清；NotebookLM 按笔记本硬隔离 | 无 |
 
@@ -283,22 +285,22 @@ q settings shareCodeWhispererContent false
 </details>
 
 <a id="notion"></a>
-### 🟢 安全 Notion AI
-*Notion Web / Desktop / Mobile* ｜ [官方文档 / Docs](https://www.notion.com/help/notion-ai-security-practices)
+### 🟡 需调 Notion AI ⚠️ (10月子处理商外泄)
+*Notion Web / Desktop / Mobile · 仍零训练但曾遭第三方外泄* ｜ [官方文档 / Docs](https://www.notion.com/help/notion-ai-security-practices)
 
-- **关闭路径**：Settings → Notion AI `➔` 确认 Share data to improve 为关 `➔` Memory → 关闭 Use memories `➔` 关闭 AI Web Search
-- **模型训练**：全计划(含 Free/Plus)默认绝不训练 ✅；Enterprise 主力模型默认 ZDR
-- **记忆设置**：Use memories 默认开 → 建议关闭；限制 Custom Agents 仅管理员可建
-- **⚠️ 避坑**：非企业版无一键隐藏 Notion AI 开关，彻底停用须邮件 team@makenotion.com
+- **关闭路径**：Settings → Notion AI `➔` 确认 Share data to improve 为关 `➔` Memory → 关闭 Use memories `➔` 绝不在对话粘贴 API Key / 密码
+- **模型训练**：全计划默认绝不训练 ✅；⚠️ 但 2026.10–11 第三方推理商 Fireworks AI 遭入侵，外泄 <1% 工作区的 Notion AI 聊天记录与粘贴的密钥（Insights 已下线停用）
+- **记忆设置**：Use memories 默认开 → 关闭；限制 Custom Agents 仅管理员可建，并排查是否曾粘贴密钥
+- **⚠️ 避坑**：第三方云子处理商同样打破“理论无留存”预期；非企业版彻底停用 AI 须邮件 team@makenotion.com
 
 <a id="opencode"></a>
-### 🟡 需调 OpenCode
-*Anomaly Co. (原 SST) CLI & Desktop* ｜ [官方文档 / Docs](https://opencode.ai/docs/config)
+### 🟡 需调 OpenCode ⚠️ (10月Console泄密)
+*Anomaly Co. (原 SST) · 仅限本地 BYOK，严禁托管 Console* ｜ [官方文档 / Docs](https://opencode.ai/docs/config)
 
-- **关闭路径**：编辑 ~/.config/opencode/opencode.json `➔` 设 share: "disabled" `➔` 禁 Zen 免费模型(仅用 BYOK) `➔` 导出 OPENCODE_DISABLE_*
-- **模型训练**：本地本体/BYOK/Zen 付费不训练；⚠️ Zen 免费促销模型允许上游收集改进!
+- **关闭路径**：严禁在 OpenCode Console 托管 Key `➔` 编辑 ~/.config/opencode/opencode.json `➔` 锁死 share: "disabled" & 禁 Zen 免费 `➔` 导出 OPENCODE_DISABLE_*
+- **模型训练**：本地 CLI/BYOK 本体零训练 ✅；⚠️ 2026.10.16 托管 Console 旧系统遭入侵外泄约 1.4% 绑定 Key（盗刷数百至上千美元）；Zen 免费模型允许收集；曾遭质疑 PostHog/Honeycomb 遥测
 - **记忆设置**：无云端记忆；历史存本地 SQLite (opencode.db)，可用 OPENCODE_DB 临时隔离
-- **⚠️ 避坑**：share 默认 manual，误敲 /share 会生成公开链接 opncd.ai/s/<id>！务必锁死 disabled
+- **⚠️ 避坑**：曾用过 Console 托管 Key 必须回 OpenAI/Anthropic/Google 后台立即吊销轮换！share 必锁 disabled 防公网链接
 
 <details open><summary>📷 产品真实界面截图（github.com/anomalyco/opencode）</summary>
 
@@ -605,14 +607,32 @@ disabled = ["WebSearch", "FetchURL"]
 # Shell: export DSH_TELEMETRY_DISABLED=1 DSH_TELEMETRY_MODE=DISABLED
 ```
 
-<a id="oss_agents"></a>
-### 🟢 安全 开源 Coding Agent 集群 (6 款)
-*Cline · Roo Code · Kilo Code · Aider · Goose · OpenClaw* ｜ [官方文档 / Docs](https://docs.cline.bot)
+<a id="oss_clean"></a>
+### 🟢 安全 纯净开源 Agent (Aider · Goose)
+*Aider · Block Goose（实测零丑闻 · 显式授权遥测）* ｜ [官方文档 / Docs](https://block.github.io/goose/)
 
-- **关闭路径**：全系本地 BYOK 零训练 ✅ `➔` Cline/Kilo 关 PostHog/产品遥测 `➔` Aider 开 gitignore:true 防提交聊天记录 `➔` Goose 关 memory · OpenClaw 关更新检查
-- **模型训练**：全部 6 款客户端本体均零训练 ✅（取决于 BYOK API / 本地 Ollama）
-- **记忆设置**：无黑盒云端画像；Aider 明文写 .aider.chat.history.md 须防误 git commit
-- **⚠️ 避坑**：Cline 已正式弃用 .clineignore（改用 PreToolUse Hook）；Roo Code 切勿登录 Roo Cloud
+- **关闭路径**：Aider: ~/.aider.conf.yml 设 analytics-disable & gitignore `➔` Goose: 首次拒绝遥测 + 设 GOOSE_TELEMETRY_OFF=1 `➔` 配合本地 Ollama 或商用 ZDR API
+- **模型训练**：两者纯本地 BYOK 零训练 ✅；Goose 首次启动显式询问授权而非偷跑；2026 全年无重大隐私或供应链丑闻
+- **记忆设置**：无黑盒云端画像；Aider 明文写 .aider.chat.history.md 务必配 gitignore: true 防误提交
+- **⚠️ 避坑**：仍须审计挂载的第三方 MCP Server 权限；Goose 同时设 GOOSE_TELEMETRY_OFF=1 与 GOOSE_TELEMETRY_ENABLED=false
+
+**⚙️ `~/.aider.conf.yml & Goose Env`**
+```yaml
+# Aider (~/.aider.conf.yml):
+analytics-disable: true
+gitignore: true
+# Block Goose (~/.zshrc & ~/.config/goose/config.yaml):
+# export GOOSE_TELEMETRY_OFF=1 GOOSE_TELEMETRY_ENABLED=false
+```
+
+<a id="cline_roo_kilo"></a>
+### 🟡 需调 Cline / Roo Code / Kilo Code ⚠️
+*VS Code 开源三叉戟 · 2026 曾曝供应链与遥测争议* ｜ [官方文档 / Docs](https://docs.cline.bot)
+
+- **关闭路径**：Cline: 避开旧版 npm 2.3.0，配 telemetryOptOut:true `➔` Roo Code: 禁登录 Roo Cloud + 升补丁防工作区 RCE `➔` Kilo Code: 关遥测并监控出网流量
+- **模型训练**：客户端本体不训练 ✅；⚠️ 但 2026 均曝风险：Cline 2026.02 遭 Clinejection 供应链投毒(npm cline@2.3.0 被劫持8小时，扩展未受影响)；Roo 曾曝关开关仍上报 CloudTelemetryClient；Kilo 曾曝离线仍有异常外连
+- **记忆设置**：无黑盒云端记忆；Roo Code 切勿登录 Roo Cloud 同步会话
+- **⚠️ 避坑**：Cline 已弃用 .clineignore（改用 PreToolUse Hook）；Roo 曾曝 CVE-2025-58372 (.code-workspace 注入)，三者均须禁自动批准命令
 
 <details open><summary>📷 产品真实界面截图（github.com/cline/cline）</summary>
 
@@ -620,12 +640,25 @@ disabled = ["WebSearch", "FetchURL"]
 
 </details>
 
-**⚙️ `多工具配置文件汇总`**
-```yaml
-# Aider (~/.aider.conf.yml): analytics-disable: true | gitignore: true
-# Goose (~/.config/goose/config.yaml): GOOSE_TELEMETRY_ENABLED: false
-# Cline (~/.cline/data/settings/global-settings.json): { "telemetryOptOut": true }
-# OpenClaw (~/.openclaw/openclaw.json): update.checkOnStart=false, telemetry.enabled=false
+**⚙️ `Cline / Kilo 配置与环境变量`**
+```json
+// Cline (~/.cline/data/settings/global-settings.json): { "telemetryOptOut": true }
+// Kilo CLI: export KILO_TELEMETRY_LEVEL=off  (高敏仓建议加本机出口防火墙白名单)
+```
+
+<a id="openclaw"></a>
+### 🔴 必关 OpenClaw ⚠️ (2026 多起高危安全危机)
+*原 Clawdbot/Moltbot · 曾曝 ClawBleed/投毒/大厂禁令* ｜ [官方文档 / Docs](https://openclaw.ai)
+
+- **关闭路径**：仅在强隔离容器/虚拟机内运行 `➔` 强制升至 Trail of Bits 审计后新版 `➔` 严禁安装未经审计的 ClawHub 技能 `➔` 关公网暴露与自动更新检查
+- **模型训练**：本体本地运行不训练，但 2026 爆发 AI 工具史上最严重安全危机：CVE-2026-25253 (ClawBleed 一键 WebSocket RCE)、ClawHavoc (ClawHub 超千个恶意技能窃密)、Claw Chain 逃逸及数万公网暴露实例，遭 Meta/Microsoft 内部封禁！
+- **记忆设置**：具备宿主机持久记忆与全权限执行能力 → 绝不可直接在存有公司源码/密钥的宿主机裸跑
+- **⚠️ 避坑**：即便已接受 Trail of Bits 审计并加固默认鉴权，高敏开发机仍强烈建议容器隔离 + 禁 ClawHub 第三方插件
+
+**⚙️ `~/.openclaw/openclaw.json & 容器隔离`**
+```json
+// ~/.openclaw/openclaw.json（务必在无宿主机密钥的 Docker/VM 中运行，切勿暴露端口到公网）
+{ "update": { "checkOnStart": false }, "telemetry": { "enabled": false }, "gateway": { "bind": "127.0.0.1", "requireAuth": true } }
 ```
 
 <a id="comm_ide"></a>
@@ -670,7 +703,7 @@ export CODEBUDDY_CODE_ENABLE_TELEMETRY=0 CODEBUDDY_ARTIFACT_ENABLED=false
 export QWEN_USAGE_STATISTICS_ENABLED=false QWEN_TELEMETRY_ENABLED=false
 export MCODE_DISABLE_TELEMETRY=1 KIMI_DISABLE_TELEMETRY=1 KIMI_DISABLE_AUTO_MEMORY=1
 export DSH_TELEMETRY_DISABLED=1 DSH_TELEMETRY_MODE=DISABLED
-export AIDER_ANALYTICS_DISABLE=true GOOSE_TELEMETRY_ENABLED=false KILO_TELEMETRY_LEVEL=off OPENCLAW_NO_AUTO_UPDATE=1
+export AIDER_ANALYTICS_DISABLE=true GOOSE_TELEMETRY_OFF=1 GOOSE_TELEMETRY_ENABLED=false KILO_TELEMETRY_LEVEL=off OPENCLAW_NO_AUTO_UPDATE=1
 ```
 
 ## 🔍 全网同类整理查重对照（为什么需要本项目）
